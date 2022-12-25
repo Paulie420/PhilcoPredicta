@@ -1,0 +1,32 @@
+#These were from an OLD install of Raspberry Pi OS; I've since updated
+#to Raspberry Pi OS Legacy - don't know if pulseaudio is still used.
+
+To get bluetoothctl to connect with bluetooth speaker, i had to 
+pulseaudio -k
+and
+pulseaudio -start
+(or pulseaudio start)?? had to kill and restart pulseaudio.
+
+in bluetoothctl you have to:
+
+pair item
+trust item
+connect item <--- this one was giving me issues...
+
+using bluez to do it.
+
+omxplayer has to have the -o alsa command to pass audio to bluetooth
+speaker...
+
+however, when i changed the omxplayer command in the python script, only
+the first video would have good sound. is it because how i kill the omx
+program? is it because of using nohup? i'll have to figure that out, but
+it sounded great - and looked great. :/
+
+would it be easier to simply run some kind of 3.5mm audio? or, figure
+out all the ways you CAN send audio from a pi zero. theres no 3.5mm jack
+so how else would you get audio out? check all the ways, and pick the 
+best fit for this project. using some external speakers, however, IS the
+way to go.
+
+

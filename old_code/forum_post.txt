@@ -1,0 +1,88 @@
+I'm always too long-winded... heres a tiny synopsis ; I don't KNOW Python but 
+have been able to Google search enough to cobble together a half-solution. I 
+want to bring new life to antique (and vintage) televisions. I have a 1946 
+Philco Predicta TV, fully refurbished, paired w/ a Raspberry Pi Zero and a 
+capacitive touch sensor. I have all 1920-1950 videos collected; 128GB or so! 
+When TV (and Pi) is turned on, Pi starts randomly displaying videos in a 
+/folder or -USB stick. If user presses capacitive touch button, kill current 
+video and goto next.
+
+Some current issues: If a video ENDS, another random video doesn't start 
+automatically - I HAVE to press the button. I don't know the 'smartest' way to 
+load my software. Currently, it displays using omxplayer to the tty1/TV... I 
+need to learn how to test for omxplayer ENDING, and starting another random 
+video...
+
+One thing I want to add now - I have a secondary /sub-directory called 
+'commercials'. I'd like 1-2 commercials to play after either every 3rd random 
+video, OR if I can code in that 1-2 play after every 15minutes, regardless of 
+how many random videos have played.
+
+One thing I want to add LATER, and don't exactly know how - I have an antique 
+remote control that I want to stuff with an Arduino. It only has four buttons, 
+but would be so cool if power turned the system off, channel up/down cycled to 
+a new random video and ... some other function for the 4th button; but I dunno 
+how the Pi will recieve that data, and this is for later...
+
+```
+pi@Predicta:~ $ cat predicta.py
+#!/usr/bin/python
+
+import time
+import os
+import random
+from gpiozero import Button
+from signal import pause
+from contextlib import contextmanager
+import sys
+
+buttonPin = 21
+directory = "/home/pi/Videos/"
+
+u/contextmanager
+def suppress_stdout():
+with open(os.devnull, "w") as devnull:
+old_stdout = sys.stdout
+sys.stdout = devnull
+try:
+yield
+finally:
+sys.stdout = old_stdout
+def playEpisode():
+with suppress_stdout():
+episode = random.choice(os.listdir(directory))
+
+#Must figure out; do we want --aspect-mode stretch or NOT. on Predicta...
+cmd = "nohup omxplayer --aspect-mode stretch "+"'"+directory+episode+"' &"
+# cmd = "nohup omxplayer "+"'"+directory+episode+"' &"
+
+os.system('sudo killall omxplayer.bin')
+os.system('sudo killall omxplayer')
+os.system(cmd)
+
+# the following DOESNT work to keep playing MORE videos after one ends...
+# currently, it waits for another buttonpress. i want more to play if no
+# buttonpress. :/
+# playEpisode()
+
+#Below does play random videos one after another, from a LIST - but doesnt
+#allow for button presses; omxplayer continues.... grrrrr. 5/30/22
+#def playEpisode():
+# videoList = os.listdir(directory)
+# random.shuffle(videoList)
+# for video in videoList:
+# target = os.path.join(directory, video)
+# os.system('omxplayer "{}" > /dev/null'.format(target))
+
+playEpisode()
+button = Button(buttonPin)
+button.when_released = playEpisode
+pause()
+
+```
+
+Here is my very limited code, and I hope a couple folks might want to help out. 
+I want to learn Python more and open-source this project so every antique 
+store, or vintage TV owner, can pop a USB stick in and breathe new life into 
+TVs that are almost useless.
+

@@ -1,0 +1,69 @@
+meatlotion:
+just playing with an idea paulie420 do you think this would work for a 
+replacement to the last few lines you have?
+
+while true:
+  if not os.system('sudo pidof omxplayer'):
+    playEpisode()
+  button = Button(buttonPin)
+  button.when_released = playEpisode
+  sleep(1000)
+
+idea is;
+make a loop, if omxplayer isn't playing, play an episode. Then check for 
+button press, if button is pressed, run playEpisode(), if not just sleep 
+for a second and repeat.
+of course, you'll need to add some way to break out if you can't use 
+ctrl+c with a keyboard
+It also assumes that after finishing an episode omxplayer quits by 
+itself, so that it will run a new episode with the while loop. 
+
+
+newbie:
+try this and let me know if it worked:
+
+import time
+import os
+import random
+from gpiozero import Button
+from signal import pause
+from contextlib import contextmanager
+import sys
+import threading
+
+buttonPin = 21
+directory = "/home/pi/Videos/"
+button = Button(buttonPin)
+
+def playEpisode():
+    videoList = os.listdir(directory)
+    random.shuffle(videoList)
+    for video in videoList:
+        target = os.path.join(directory, video)
+        os.system('omxplayer "{}" > /dev/null'.format(target))
+
+def killEpisode()"
+    while true:
+        button.wait_for_release()
+        os.system('sudo killall omxplayer.bin')
+        os.system('sudo killall omxplayer')
+
+  
+if __name__ == "__main__":
+    # creating thread
+    t1 = threading.Thread(target=playEpisode)
+    t2 = threading.Thread(target=killEpisode)
+  
+    # starting thread 1
+    t1.start()
+    # starting thread 2
+    t2.start()
+  
+    # wait until thread 1 is completely executed
+    t1.join()
+    # wait until thread 2 is completely executed (No need)
+    #t2.join()
+  
+    # both threads completely executed
+    print("Done!")
+

@@ -1,0 +1,11 @@
+/etc/init.d/asplashscreen is a script that you can systemctl status asplashscreen
+but its not displaying @ boot. it was/is an init.d service, but i entered many
+commands and nothing w0rks currently:
+
+[run as root]
+
+/etc/init.d/asplashscreen start
+
+
+#COMMENTED OUT one line of root crontab; that blanks the entire tty1 screen.
+
