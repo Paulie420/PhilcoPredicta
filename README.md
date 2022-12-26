@@ -39,3 +39,21 @@ however this project IS the source; so the end user just turns on the Predicta
 and it starts playing videos. This gives the Predicta new life... theres many 
 applications for old antique televisions, and I hope to expand this project 
 into something that is good for all antique televisions.
+----
+If you wanted to install yourself, just install Raspberry Pi OS Lite to a 
+Raspberry Pi Zero (or other).
+
+sudo apt update
+sudo apt upgrade
+sudo apt install omxplayer fbi
+
+And add a cronjob to run the script;
+sudo crontab -e
+
+And add the following line;
+@reboot python2 /home/pi/maintenance.py
+-----
+Reboot the Pi and the script will begin. Install a capacative touch sensor on
+Pin 21. A button can be used, but you would have to change the Python code to
+call button.when_pressed instead of button.when_released .
+
